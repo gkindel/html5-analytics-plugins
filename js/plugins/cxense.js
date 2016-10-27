@@ -101,11 +101,6 @@ var CxenseAnalyticsPlugin = function (framework)
         var Events = OO.Analytics.EVENTS;
         var param = params && params.length? params[0] : {};
 
-        if( [
-                Events.VIDEO_STREAM_POSITION_CHANGED,
-                Events.VIDEO_STREAM_DOWNLOADING
-            ].indexOf(eventName) === -1){
-        }
 
         OO.log( "Analytics Template: PluginID \'" + id + "\' received this event \'" + eventName + "\' with these params:", params);
 
