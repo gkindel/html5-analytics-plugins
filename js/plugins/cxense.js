@@ -99,7 +99,7 @@ var CxenseAnalyticsPlugin = function (framework)
     this.processEvent = function(eventName, params)
     {
         var Events = OO.Analytics.EVENTS;
-        var param = params[0];
+        var param = params && params.length? params[0] : {};
 
         if( [
                 Events.VIDEO_STREAM_POSITION_CHANGED,
@@ -115,7 +115,7 @@ var CxenseAnalyticsPlugin = function (framework)
                 cX.callQueue.push(["video", "initialize", {
                     logging: config.logging,
                     debug: config.debug,
-                    element : document.getElementById(config.elementId)
+                    element : "#" + config.elementId
                 }]);
                 break;
 
