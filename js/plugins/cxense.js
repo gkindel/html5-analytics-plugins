@@ -101,15 +101,9 @@ var CxenseAnalyticsPlugin = function (framework)
         var Events = OO.Analytics.EVENTS;
         var param = params && params.length? params[0] : {};
 
-        if( ! cX ){
-            console.warn("Missing dependency: cX")
-            return;
-        }
 
-        if( ! cX.videoQueue ){
-            console.warn("Missing dependency: cX.videoQueue")
-            return;
-        }
+        window.cX = window.cX || {};
+        cX.videoQueue = cX.videoQueue || [];
 
         OO.log( "Analytics Template: PluginID \'" + id + "\' received this event \'" + eventName + "\' with these params:", params);
 
