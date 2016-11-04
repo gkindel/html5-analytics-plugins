@@ -101,13 +101,22 @@ var CxenseAnalyticsPlugin = function (framework)
         var Events = OO.Analytics.EVENTS;
         var param = params && params.length? params[0] : {};
 
+        if( ! cX ){
+            console.warn("Missing dependency: cX")
+            return;
+        }
+
+        if( ! cX.videoQueue ){
+            console.warn("Missing dependency: cX.videoQueue")
+            return;
+        }
 
         OO.log( "Analytics Template: PluginID \'" + id + "\' received this event \'" + eventName + "\' with these params:", params);
 
         switch(eventName)
         {
             case Events.VIDEO_PLAYER_CREATED:
-                cX.callQueue.push(["video", "initialize", {
+                cX.videoQueue.push(["initialize", {
                     logging: config.logging,
                     debug: config.debug,
                     element : "#" + config.elementId
@@ -115,28 +124,28 @@ var CxenseAnalyticsPlugin = function (framework)
                 break;
 
             case Events.VIDEO_SOURCE_CHANGED:
-                cX.callQueue.push(["video", "impression", {
+                cX.videoQueue.push(["impression", {
                     contentId : param.embedCode
                 }]);
                 break;
 
             case Events.VIDEO_PLAYING:
-                cX.callQueue.push(["video", "playing", {}]);
+                cX.videoQueue.push(["playing", {}]);
                 break;
 
             case Events.VIDEO_PAUSED:
-                cX.callQueue.push(["video", "paused", {}]);
+                cX.videoQueue.push(["paused", {}]);
                 break;
 
             case Events.VIDEO_STREAM_POSITION_CHANGED:
-                cX.callQueue.push(["video", "timeupdate", {
+                cX.videoQueue.push(["timeupdate", {
                     currentTime : param.streamPosition,
                     duration : param.totalStreamDuration
                 }]);
                 break;
 
             case Events.VIDEO_CONTENT_COMPLETED:
-                cX.callQueue.push(["video", "ended", {}]);
+                cX.videoQueue.push(["ended", {}]);
                 break;
 
             default:

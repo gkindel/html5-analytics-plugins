@@ -21,7 +21,7 @@ describe('Analytics Framework Template Unit Tests', function()
     //setup for individual tests
     var testSetup = function()
     {
-        global.cX = { callQueue : [] };
+        global.cX = { videoQueue : [] };
         framework = new Analytics.Framework();
         //mute the logging becuase there will be lots of error messages
         OO.log = function(){};
@@ -217,8 +217,8 @@ describe('Analytics Framework Template Unit Tests', function()
 
         plugin.processEvent(OO.Analytics.EVENTS.VIDEO_PLAYER_CREATED);
 
-        expect(cX.callQueue).toEqual([
-            ['video', 'initialize', {element: "#myElementId", logging: undefined, debug: undefined}]
+        expect(cX.videoQueue).toEqual([
+            ['initialize', {element: "#myElementId", logging: undefined, debug: undefined}]
         ]);
     });
 
@@ -226,21 +226,21 @@ describe('Analytics Framework Template Unit Tests', function()
         var plugin = getConfiguredPlugin("myElementId");
 
         plugin.processEvent(OO.Analytics.EVENTS.VIDEO_PLAYER_CREATED);
-        cX.callQueue = [];
+        cX.videoQueue = [];
 
         plugin.processEvent(OO.Analytics.EVENTS.VIDEO_SOURCE_CHANGED, [{
             embedCode: "testEmbedCode"
         }]);
-        expect(cX.callQueue).toEqual([
-            [ 'video', 'impression', { contentId : "testEmbedCode" }]
+        expect(cX.videoQueue).toEqual([
+            ['impression', { contentId : "testEmbedCode" }]
         ]);
-        cX.callQueue = [];
+        cX.videoQueue = [];
 
         plugin.processEvent(OO.Analytics.EVENTS.VIDEO_SOURCE_CHANGED, [{
             embedCode: "testEmbedCode2"
         }]);
-        expect(cX.callQueue).toEqual([
-            [ 'video', 'impression', { contentId : "testEmbedCode2" }]
+        expect(cX.videoQueue).toEqual([
+            ['impression', { contentId : "testEmbedCode2" }]
         ]);
     });
 
@@ -248,13 +248,13 @@ describe('Analytics Framework Template Unit Tests', function()
         var plugin = getConfiguredPlugin("myElementId");
         var simulator = Utils.createPlaybackSimulator(plugin);
         simulator.simulatePlayerLoad({ embedCode: "testEmbedCode" });
-        cX.callQueue = [];
+        cX.videoQueue = [];
 
         plugin.processEvent(OO.Analytics.EVENTS.VIDEO_SOURCE_CHANGED, [{
             embedCode: "testEmbedCode2"
         }]);
-        expect(cX.callQueue).toEqual([
-            [ 'video', 'impression', { contentId : "testEmbedCode2" }]
+        expect(cX.videoQueue).toEqual([
+            ['impression', { contentId : "testEmbedCode2" }]
         ]);
     });
 
@@ -262,13 +262,13 @@ describe('Analytics Framework Template Unit Tests', function()
         var plugin = getConfiguredPlugin("myElementId");
         plugin.processEvent(OO.Analytics.EVENTS.VIDEO_PLAYER_CREATED);
         plugin.processEvent(OO.Analytics.EVENTS.VIDEO_SOURCE_CHANGED, [{ embedCode: "testEmbedCode"}]);
-        cX.callQueue = [];
+        cX.videoQueue = [];
 
         plugin.processEvent(OO.Analytics.EVENTS.VIDEO_SOURCE_CHANGED, [{
             embedCode: "testEmbedCode2"
         }]);
-        expect(cX.callQueue).toEqual([
-            [ 'video', 'impression', { contentId : "testEmbedCode2" }]
+        expect(cX.videoQueue).toEqual([
+            ['impression', { contentId : "testEmbedCode2" }]
         ]);
     });
 
@@ -291,9 +291,9 @@ describe('Analytics Framework Template Unit Tests', function()
         plugin.processEvent(OO.Analytics.EVENTS.VIDEO_PLAYER_CREATED);
         plugin.processEvent(OO.Analytics.EVENTS.VIDEO_SOURCE_CHANGED, [{ embedCode: "testEmbedCode"}]);
 
-        expect(cX.callQueue).toEqual([
-            ['video', 'initialize', {element: "#myElementId", logging: undefined, debug: undefined}],
-            [ 'video', 'impression', { contentId : "testEmbedCode" }]
+        expect(cX.videoQueue).toEqual([
+            ['initialize', {element: "#myElementId", logging: undefined, debug: undefined}],
+            ['impression', { contentId : "testEmbedCode" }]
         ]);
     });
 
@@ -302,10 +302,10 @@ describe('Analytics Framework Template Unit Tests', function()
         var simulator = Utils.createPlaybackSimulator(plugin);
         simulator.simulatePlayerLoad({ embedCode: "testEmbedCode" });
         simulator.simulateContentPlayback();
-        expect(cX.callQueue).toEqual([
-            ['video', 'initialize', {element: "#myElementId", logging: undefined, debug: undefined}],
-            [ 'video', 'impression', { contentId : "testEmbedCode" }],
-            [ 'video', 'playing', { }]
+        expect(cX.videoQueue).toEqual([
+            ['initialize', {element: "#myElementId", logging: undefined, debug: undefined}],
+            ['impression', { contentId : "testEmbedCode" }],
+            ['playing', { }]
         ]);
     });
 
@@ -314,32 +314,32 @@ describe('Analytics Framework Template Unit Tests', function()
         var simulator = Utils.createPlaybackSimulator(plugin);
         simulator.simulatePlayerLoad({ embedCode: "testEmbedCode" });
         simulator.simulateContentPlayback();
-        cX.callQueue = [];
+        cX.videoQueue = [];
 
         simulator.simulateVideoProgress({
             playheads: [0, 2, 4],
             totalStreamDuration: 60
         });
-        expect(cX.callQueue).toEqual([
-            [ 'video', 'timeupdate', { currentTime : 0, duration : 60 }],
-            [ 'video', 'timeupdate', { currentTime : 2, duration : 60 }],
-            [ 'video', 'timeupdate', { currentTime : 4, duration : 60 }]
+        expect(cX.videoQueue).toEqual([
+            ['timeupdate', { currentTime : 0, duration : 60 }],
+            ['timeupdate', { currentTime : 2, duration : 60 }],
+            ['timeupdate', { currentTime : 4, duration : 60 }]
         ]);
     });
 
     it('Test pause', function() {
         var plugin = getConfiguredPlugin("myElementId");
         plugin.processEvent(OO.Analytics.EVENTS.VIDEO_PAUSED);
-        expect(cX.callQueue).toEqual([
-            [ 'video', 'paused', {}],
+        expect(cX.videoQueue).toEqual([
+            ['paused', {}],
         ]);
     });
 
     it('Test complete', function() {
         var plugin = getConfiguredPlugin("myElementId");
         plugin.processEvent(OO.Analytics.EVENTS.VIDEO_CONTENT_COMPLETED);
-        expect(cX.callQueue).toEqual([
-            [ 'video', 'ended', {}],
+        expect(cX.videoQueue).toEqual([
+            ['ended', {}],
         ]);
     });
 
